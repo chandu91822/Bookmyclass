@@ -9,8 +9,10 @@ include "config.php"; // Database connection file
 
 $name = $_SESSION['name'];
 
-// Fetch user bookings from the database
-$bookings_query = "SELECT date, time_from,time_to,classroom FROM bookings WHERE name = ?";
+// Fetch user bookings from the database (current bookings schema).
+$bookings_query = "SELECT date, start_time AS time_from, end_time AS time_to, room_number AS classroom
+                   FROM bookings
+                   WHERE name = ?";
 $stmt = $conn->prepare($bookings_query);
 $stmt->bind_param("s", $name);
 $stmt->execute();
@@ -199,7 +201,7 @@ $conn->close();
                 response += "❌ No bookings found.";
             } else {
                 bookings.forEach(b => {
-                    response += `📍 ${b.classroom} - ${b.date} at ${b.time}<br>`;
+                    response += `📍 ${b.classroom} - ${b.date} at ${b.time_from} to ${b.time_to}<br>`;
                 });
             }
             return response;

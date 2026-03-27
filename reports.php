@@ -3,8 +3,11 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 include 'config.php';
 
-// Fetch past bookings (Older than today)
-$sql = "SELECT classroom, date, time_from, time_to FROM bookings WHERE date < CURDATE() ORDER BY date DESC";
+// Fetch past bookings (older than today) using current column names.
+$sql = "SELECT room_number AS classroom, date, start_time AS time_from, end_time AS time_to
+        FROM bookings
+        WHERE date < CURDATE()
+        ORDER BY date DESC, start_time DESC";
 $result = $conn->query($sql);
 ?>
 

@@ -3,8 +3,8 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 include 'config.php';
 
-// Fetch total bookings per classroom
-$sql = "SELECT classroom, COUNT(*) as count FROM bookings GROUP BY classroom";
+// Fetch total bookings per room using the current bookings schema.
+$sql = "SELECT room_number AS classroom, COUNT(*) AS count FROM bookings GROUP BY room_number";
 $result = $conn->query($sql);
 $rooms = [];
 $counts = [];

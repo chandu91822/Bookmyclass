@@ -6,34 +6,42 @@ session_start();
 $error = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $identifier = mysqli_real_escape_string($conn, $_POST['identifier']); // Username or Email
-    $password = $_POST['password'];
+    $identifier = mysqli_real_escape_string($conn, $_POST['identifier'] ?? ''); // Username or Email
+    $password = $_POST['password'] ?? '';
 
-    // Query to find user by name or email
-    $query = "SELECT * FROM users WHERE name = '$identifier' OR email = '$identifier'";
-    $result = mysqli_query($conn, $query);
-
-    if (mysqli_num_rows($result) == 1) {
-        $user = mysqli_fetch_assoc($result);
-        if ($user['password'] == $password) { // Simple password check (In prod use password_verify)
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['role'] = $user['role'];
-            $_SESSION['name'] = $user['name'];
-
-            // Redirect based on detected role
-            if ($user['role'] == 'admin') {
-                header("Location: admin_dashboard.php");
-            } elseif ($user['role'] == 'faculty') {
-                header("Location: faculty_dashboard.php");
-            } else {
-                header("Location: student_dashboard.php");
-            }
-            exit();
-        } else {
-            $error = "Incorrect password.";
-        }
+    if ($identifier === '' || $password === '') {
+        $error = "Missing login details.";
     } else {
-        $error = "User not found.";
+
+        // Query to find user by name or email
+        $query = "SELECT * FROM users WHERE name = '$identifier' OR email = '$identifier'";
+        $result = mysqli_query($conn, $query);
+
+        if (mysqli_num_rows($result) == 1) {
+            $user = mysqli_fetch_assoc($result);
+            $stored_password = $user['password'];
+            $is_valid_password = password_verify($password, $stored_password) || hash_equals($stored_password, $password);
+            if ($is_valid_password) {
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['role'] = $user['role'];
+                $_SESSION['name'] = $user['name'];
+
+                // Redirect based on detected role
+                if ($user['role'] == 'admin') {
+                    header("Location: admin_dashboard.php");
+                } elseif ($user['role'] == 'faculty') {
+                    header("Location: faculty_dashboard.php");
+                } else {
+                    header("Location: student_dashboard.php");
+                }
+                exit();
+            } else {
+                $error = "Incorrect password.";
+            }
+        } else {
+            $error = "User not found.";
+        }
+    
     }
 }
 ?>

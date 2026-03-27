@@ -4,10 +4,11 @@ include "config.php";
 // Get current date and time
 $current_time = new DateTime();
 
-// 🔔 Fetch Latest 5 Booking Notifications (Future Only)
-$notif_sql = "SELECT classroom, date, time_from, time_to 
-              FROM bookings 
-              ORDER BY date DESC, time_from DESC LIMIT 5";
+// Fetch latest 5 booking notifications (future only) using current schema.
+$notif_sql = "SELECT room_number AS classroom, date, start_time AS time_from, end_time AS time_to
+              FROM bookings
+              ORDER BY date DESC, start_time DESC
+              LIMIT 5";
 $notif_result = $conn->query($notif_sql);
 $notifications = [];
 
@@ -23,11 +24,11 @@ while ($row = $notif_result->fetch_assoc()) {
     }
 }
 
-// 📊 Fetch Booking Data for Graph (Last 7 Days, Future Only)
-$graph_sql = "SELECT classroom, date, time_from, COUNT(*) AS usage_count 
-              FROM bookings 
+// Fetch booking data for graph (last 7 days, future only).
+$graph_sql = "SELECT room_number AS classroom, date, start_time AS time_from, COUNT(*) AS usage_count
+              FROM bookings
               WHERE date >= CURDATE() - INTERVAL 7 DAY
-              GROUP BY classroom, date, time_from";
+              GROUP BY room_number, date, start_time";
 $graph_result = $conn->query($graph_sql);
 $rooms = [];
 $counts = [];
@@ -42,8 +43,10 @@ while ($row = $graph_result->fetch_assoc()) {
     }
 }
 
-// 🆕 NEW: Classroom Booking Count (Total Per Classroom)
-$room_count_sql = "SELECT classroom, COUNT(*) AS total_count FROM bookings GROUP BY classroom";
+// Classroom booking count (total per room).
+$room_count_sql = "SELECT room_number AS classroom, COUNT(*) AS total_count
+                   FROM bookings
+                   GROUP BY room_number";
 $room_count_result = $conn->query($room_count_sql);
 $classroomLabels = [];
 $classroomCounts = [];

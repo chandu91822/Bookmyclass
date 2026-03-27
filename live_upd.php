@@ -3,8 +3,12 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 include 'config.php';
 
-// Fetch the latest 10 bookings
-$sql = "SELECT * FROM bookings ORDER BY time_from DESC LIMIT 10";
+// Fetch the latest 10 bookings with aliases expected by the UI.
+$sql = "SELECT id, name, year, section, room_number AS classroom, date,
+               start_time AS time_from, end_time AS time_to, created_at
+        FROM bookings
+        ORDER BY date DESC, start_time DESC
+        LIMIT 10";
 $result = $conn->query($sql);
 ?>
 

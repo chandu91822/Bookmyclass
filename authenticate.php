@@ -5,9 +5,14 @@ ini_set('display_errors', 1);
 include 'config.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-    $role = $_POST['role'];
+    $email = $_POST['email'] ?? '';
+    $password = $_POST['password'] ?? '';
+    $role = $_POST['role'] ?? '';
+
+    if ($email === '' || $password === '' || $role === '') {
+        echo "<script>alert('Missing login details.'); window.location.href='login.php';</script>";
+        exit();
+    }
 
     $query = "SELECT id, name, password, role FROM users WHERE email = ? AND role = ?";
     $stmt = mysqli_prepare($conn, $query);
@@ -17,10 +22,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user = mysqli_fetch_assoc($result);
 
     if ($user) {
-        // Checking password directly (plain text)
-        if ($password === $user['password']) {
+        // Support both modern hashed passwords and legacy plain-text values.
+        $stored_password = $user['password'];
+        $is_valid_password = password_verify($password, $stored_password) || hash_equals($stored_password, $password);
+
+        if ($is_valid_password) {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['name'] = $user['name'];
+            $_SESSION['role'] = $user['role'];
             $_SESSION['user_role'] = $user['role'];
 
             // Redirect based on role
