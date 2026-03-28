@@ -18,7 +18,16 @@ if (isset($_POST['export_bookings'])) {
     $query = "SELECT * FROM bookings ORDER BY date DESC";
     $result = mysqli_query($conn, $query);
     while($row = mysqli_fetch_assoc($result)) {
-        fputcsv($output, $row);
+        fputcsv($output, [
+    $row['id'],
+    $row['room'],
+    $row['date'],
+    $row['start_time'],
+    $row['end_time'],
+    $row['user_id'],
+    $row['purpose'],
+    $row['status'] ?? 'N/A'
+]);
     }
     fclose($output);
     exit();
@@ -54,7 +63,7 @@ if (isset($_POST['export_bookings'])) {
             </div>
             <div class="nav-actions">
                 <div style="display: flex; flex-direction: column; align-items: flex-end; margin-right: 15px;">
-                    <span style="color: white; font-weight: 600; font-size: 0.9rem;"><?php echo htmlspecialchars($user['name']); ?></span>
+                    <span style="color: white; font-weight: 600; font-size: 0.9rem;"><?php echo htmlspecialchars($_SESSION['name'] ?? 'Admin'); ?></span>
                     <span style="color: var(--text-muted); font-size: 0.75rem;">Admin</span>
                 </div>
                 <!-- Profile Icon -->

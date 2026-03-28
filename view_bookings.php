@@ -1,7 +1,8 @@
 <?php
 // view_bookings.php - Admin Full Control
-include 'config.php';
 session_start();
+include 'config.php';
+$user_name = $_SESSION['name'] ?? 'Admin';
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header("Location: login.php");
@@ -53,7 +54,7 @@ $result = mysqli_query($conn, "SELECT b.*, u.name as user_name, u.role as user_r
             </div>
             <div class="nav-actions">
                 <div style="display: flex; flex-direction: column; align-items: flex-end; margin-right: 15px;">
-                    <span style="color: white; font-weight: 600; font-size: 0.9rem;"><?php echo htmlspecialchars($user['name']); ?></span>
+                    <span style="color: white; font-weight: 600; font-size: 0.9rem;"><?php echo htmlspecialchars($_SESSION['name'] ?? 'Admin'); ?></span>
                     <span style="color: var(--text-muted); font-size: 0.75rem;">Admin</span>
                 </div>
                 <!-- Profile Icon -->

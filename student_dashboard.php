@@ -142,7 +142,7 @@ $upcoming_count = mysqli_num_rows($upcoming_result);
                                             <td>
                                                 <?php echo date("g:i A", strtotime($row['start_time'])) . ' - ' . date("g:i A", strtotime($row['end_time'])); ?>
                                             </td>
-                                            <td><?php echo htmlspecialchars($row['reason']); ?></td>
+                                            <td><?php echo htmlspecialchars($row['subject']); ?></td>
                                             <td><span class="badge" style="background: #22c55e; color: white;">LIVE</span></td>
                                         </tr>
                                         <?php endwhile; ?>

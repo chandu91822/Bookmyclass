@@ -9,9 +9,9 @@ $user_name = $_SESSION['user_name'] ?? '';
     <ul class="nav-links">
       <li><a href="index.php">Home</a></li>
       <?php if ($user_role === 'faculty'): ?>
-        <li><a href="faculty-dashboard.php">Dashboard</a></li>
+        <li><a href="faculty_dashboard.php">Dashboard</a></li>
       <?php elseif ($user_role === 'admin'): ?>
-        <li><a href="admin-panel.php">Admin Panel</a></li>
+        <li><a href="admin_dashboard.php">Admin Panel</a></li>
       <?php endif; ?>
       <?php if ($user_role === 'guest'): ?>
         <li><a href="login.php" class="btn login-btn">Login</a></li>

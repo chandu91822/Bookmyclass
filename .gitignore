@@ -1,0 +1,28 @@
+# Local environment and secrets
+.env
+.env.*
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# Common dependency/build outputs
+node_modules/
+vendor/
+dist/
+build/
+coverage/
+
+# Runtime upload artifacts
+uploads/assignments/*
+uploads/profiles/*
+!uploads/profiles/1.jpg

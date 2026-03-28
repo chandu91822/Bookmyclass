@@ -1,12 +1,12 @@
 <?php
-$servername = "127.0.0.1";
-$username = "root";
-$password = "";
-$dbname = "book_class";
+$host = "db";   // 🔥 IMPORTANT (not localhost)
+$user = "user";
+$pass = "user123";
+$dbname = "mydb";
 
-$conn = mysqli_connect($servername, $username, $password, $dbname);
+$conn = new mysqli($host, $user, $pass, $dbname);
 
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
 }
 ?>

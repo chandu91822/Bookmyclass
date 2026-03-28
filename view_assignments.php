@@ -5,15 +5,11 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// Database Connection
-$conn = new mysqli("localhost", "root", "", "classroom_booking");
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+include 'config.php';
 
 // Fetch User Bookings
 $user_id = $_SESSION['user_id'];
-$sql = "SELECT * FROM bookings WHERE user_id = '$user_id' ORDER BY booking_date DESC";
+$sql = "SELECT * FROM bookings WHERE user_id = '$user_id' ORDER BY date DESC, start_time DESC";
 $result = $conn->query($sql);
 ?>
 
@@ -118,16 +114,16 @@ $result = $conn->query($sql);
         <?php while ($row = $result->fetch_assoc()) { ?>
             <tr>
                 <td><?php echo $row['id']; ?></td>
-                <td><?php echo $row['classroom']; ?></td>
-                <td><?php echo $row['booking_date']; ?></td>
-                <td><?php echo $row['time_slot']; ?></td>
+                <td><?php echo htmlspecialchars($row['room_number']); ?></td>
+                <td><?php echo htmlspecialchars($row['date']); ?></td>
+                <td><?php echo date("g:i A", strtotime($row['start_time'])) . ' - ' . date("g:i A", strtotime($row['end_time'])); ?></td>
                 <td>
                     <span class="status <?php echo strtolower($row['status']); ?>">
                         <?php echo ucfirst($row['status']); ?>
                     </span>
                 </td>
                 <td>
-                    <?php if ($row['status'] === 'Pending') { ?>
+                    <?php if (strtolower($row['status']) === 'pending') { ?>
                         <form method="POST" action="cancel_booking.php">
                             <input type="hidden" name="booking_id" value="<?php echo $row['id']; ?>">
                             <button type="submit" class="cancel-btn">Cancel</button>
