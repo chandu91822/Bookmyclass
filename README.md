@@ -36,3 +36,54 @@ A web-based classroom booking and management system.
 
 ## Required Packages
 The system requires standard PHP and MySQL extensions to function correctly. A list of expected server dependencies can be found in `requirements.txt`.
+
+## Jenkins CI/CD (GitHub -> Docker Hub -> Kubernetes)
+
+This repository now includes a `Jenkinsfile` that automates:
+- Trigger on every GitHub push
+- Build Docker image
+- Push image to Docker Hub (`latest` + build tag)
+- Apply Kubernetes manifests and roll out the new image
+
+### 1. Jenkins Prerequisites
+- Jenkins plugins:
+  - Git
+  - GitHub
+  - Pipeline
+  - Credentials Binding
+- Jenkins agent/node tools:
+  - `docker`
+  - `kubectl`
+  - access to your Kubernetes cluster
+
+### 2. Add Jenkins Credentials
+Create these credentials in Jenkins (`Manage Jenkins` -> `Credentials`):
+- `dockerhub-credentials` (type: Username with password)
+  - username: your Docker Hub username
+  - password: Docker Hub password or access token
+- `kubeconfig` (type: Secret file)
+  - upload kubeconfig file for your target cluster
+
+### 3. Create Jenkins Pipeline Job
+- Use **Pipeline script from SCM**
+- SCM: Git
+- Repository: your GitHub repo URL
+- Script Path: `Jenkinsfile`
+- Optional parameters while running:
+  - `DOCKERHUB_REPO` (for example `yourname/bookmyclass`)
+  - `K8S_NAMESPACE` (default `default`)
+
+### 4. Configure GitHub Webhook
+In your GitHub repo:
+- Go to `Settings` -> `Webhooks` -> `Add webhook`
+- Payload URL: `http://<jenkins-public-url>/github-webhook/`
+- Content type: `application/json`
+- Event: `Just the push event`
+- Save
+
+### 5. Verify Deployment URL
+After a successful pipeline run:
+- Check service details:
+  - `kubectl get svc bookmyclass-app-service -n <namespace> -o wide`
+- With current `app-service.yaml` (`NodePort: 30081`), access:
+  - `http://<node-ip>:30081`

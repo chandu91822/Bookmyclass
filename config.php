@@ -1,5 +1,5 @@
 <?php
-$host = "db";   // 🔥 IMPORTANT (not localhost)
+$host = "db";   
 $user = "user";
 $pass = "user123";
 $dbname = "mydb";

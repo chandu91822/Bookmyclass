@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bookmyclass-app
+  labels:
+    app: bookmyclass-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bookmyclass-app
+  template:
+    metadata:
+      labels:
+        app: bookmyclass-app
+    spec:
+      containers:
+        - name: bookmyclass-app
+          image: chandu91822/bookmyclass:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          env:
+            - name: DB_HOST
+              value: db
+            - name: DB_NAME
+              value: mydb
+            - name: DB_USER
+              value: user
+            - name: DB_PASSWORD
+              value: user123
