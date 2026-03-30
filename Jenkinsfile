@@ -1,11 +1,6 @@
 pipeline {
   agent any
 
-  parameters {
-    string(name: 'DOCKERHUB_REPO', defaultValue: 'chandu91822/bookmyclass', description: 'Docker Hub repository (example: username/bookmyclass)')
-    string(name: 'K8S_NAMESPACE', defaultValue: 'default', description: 'Kubernetes namespace for deployment')
-  }
-
   triggers {
     githubPush()
   }
@@ -16,17 +11,19 @@ pipeline {
   }
 
   environment {
-    DOCKERHUB_REPO = "${params.DOCKERHUB_REPO}"
+    GIT_REPO = 'https://github.com/chandu91822/jenkins-demo.git'
+    GIT_BRANCH = 'main'
+    DOCKERHUB_REPO = 'chandu91822/bookmyclass'
     IMAGE_TAG = "${BUILD_NUMBER}"
     APP_DEPLOYMENT = 'bookmyclass-app'
     APP_CONTAINER = 'bookmyclass-app'
-    K8S_NAMESPACE = "${params.K8S_NAMESPACE}"
+    K8S_NAMESPACE = 'default'
   }
 
   stages {
     stage('Checkout') {
       steps {
-        checkout scm
+        git branch: "${GIT_BRANCH}", credentialsId: 'github-cred', url: "${GIT_REPO}"
       }
     }
 
@@ -53,7 +50,7 @@ pipeline {
 
     stage('Push Docker Image') {
       steps {
-        withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
+        withCredentials([usernamePassword(credentialsId: 'dockerhub-cred', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
           sh '''
             set -eu
             echo "${DOCKERHUB_PASS}" | docker login -u "${DOCKERHUB_USER}" --password-stdin
