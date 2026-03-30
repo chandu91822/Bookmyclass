@@ -85,7 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <form method="POST" action="">
                 <div class="form-group">
                     <label>Username</label>
-                    <input type="text" name="identifier" class="form-input" placeholder="e.g. John" required>
+                    <input type="text" name="identifier" class="form-input" placeholder="e.g. Chandu" required>
                 </div>
                 
                 <div class="form-group">
