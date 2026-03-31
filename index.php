@@ -1,5 +1,4 @@
 <?php
-// index.php - BookMyClass (Pale Blue & Purple Theme)
 session_start();
 ?>
 <!DOCTYPE html>
