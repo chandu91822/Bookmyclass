@@ -1,6 +1,7 @@
 # BookMyClass
 
-A web-based classroom booking and management system.
+A role-based classroom booking system with real-time availability and conflict prevention, integrated with a complete CI/CD pipeline for automated deployment.
+
 
 ## Technologies Used
 - HTML
