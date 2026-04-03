@@ -1,13 +1,21 @@
 # BookMyClass
 
-A web-based classroom booking and management system.
+A role-based classroom booking system with real-time availability and conflict prevention, integrated with a complete CI/CD pipeline for automated deployment.
 
-## Technologies Used
-- HTML
-- CSS
-- JavaScript
-- PHP
-- MySQL
+## 🏗 Architecture
+- User interacts with web application
+- Code pushed to GitHub
+- Jenkins triggers CI/CD pipeline
+- Docker builds container image
+- Image deployed to Kubernetes (Minikube)
+- Application exposed via service
+
+## ⚙️ Tech Stack
+- Frontend: HTML, CSS, JS
+- Backend: PHP
+- Database: MySQL
+- DevOps: Jenkins, Docker, Kubernetes
+- Version Control: GitHub
 
 ## Setup Instructions
 
@@ -87,3 +95,4 @@ After a successful pipeline run:
   - `kubectl get svc bookmyclass-app-service -n <namespace> -o wide`
 - With current `app-service.yaml` (`NodePort: 30081`), access:
   - `http://<node-ip>:30081`
+

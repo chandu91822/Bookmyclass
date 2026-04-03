@@ -11,7 +11,7 @@ pipeline {
   }
 
   environment {
-    GIT_REPO = 'https://github.com/chandu91822/jenkins-demo.git'
+    GIT_REPO = 'https://github.com/chandu91822/Bookmyclass.git'
     GIT_BRANCH = 'main'
     DOCKERHUB_REPO = 'chandu91822/bookmyclass'
     IMAGE_TAG = "${BUILD_NUMBER}"
