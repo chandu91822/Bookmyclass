@@ -12,7 +12,7 @@ A role-based classroom booking system with real-time availability and conflict p
 
 ## Architecture Design
 
-![Architecture](Assets/Architecture.png)
+![Architecture](Assets/https://github.com/chandu91822/Bookmyclass/blob/main/assets/Architecture.png)
 
 ## ⚙️ Tech Stack
 - Frontend: HTML, CSS, JS
