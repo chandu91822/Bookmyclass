@@ -21,10 +21,14 @@ services:
       - mysql-data:/var/lib/mysql
       - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 5s
+      test:
+        [
+          "CMD-SHELL",
+          "mysqladmin ping -h 127.0.0.1 -u$$MYSQL_USER -p$$MYSQL_PASSWORD --silent && mysql -h 127.0.0.1 -u$$MYSQL_USER -p$$MYSQL_PASSWORD -D $$MYSQL_DATABASE -e 'SELECT 1' >/dev/null",
+        ]
+      interval: 10s
       timeout: 5s
-      retries: 10
+      retries: 36
 
 volumes:
   mysql-data:

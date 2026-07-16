@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -u
+set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
@@ -8,8 +8,8 @@ APP_URL="${APP_URL:-http://localhost:8081}"
 DB_SERVICE="${DB_SERVICE:-db}"
 WEB_SERVICE="${WEB_SERVICE:-web}"
 DB_NAME="${DB_NAME:-mydb}"
-DB_USER="${DB_USER:-root}"
-DB_PASS="${DB_PASS:-root123}"
+DB_USER="${DB_USER:-user}"
+DB_PASS="${DB_PASS:-user123}"
 
 TMP_DIR="${TMP_DIR:-/tmp/bookmyclass_fulltest}"
 mkdir -p "$TMP_DIR"
@@ -58,8 +58,9 @@ assert_db_equals() {
   local sql="$2"
   local expected="$3"
   local actual
-  actual="$(mysql_exec "$sql" 2>/dev/null | tr -d '\r')"
-  if [[ "$actual" == "$expected" ]]; then
+  if ! actual="$(mysql_exec "$sql" 2>/dev/null | tr -d '\r')"; then
+    fail "$desc (database query failed)"
+  elif [[ "$actual" == "$expected" ]]; then
     pass "$desc"
   else
     fail "$desc (expected='$expected', got='${actual:-<empty>}')"
@@ -174,7 +175,7 @@ fi
 
 log "Waiting for DB health..."
 HEALTH=""
-for _ in {1..60}; do
+for _ in {1..150}; do
   HEALTH="$(docker inspect --format '{{.State.Health.Status}}' "$DB_CID" 2>/dev/null || true)"
   [[ "$HEALTH" == "healthy" ]] && break
   sleep 2
@@ -193,18 +194,20 @@ pass "Schema applied"
 seed_users
 pass "Seeded users and cleaned test artifacts"
 
-log "Waiting for app HTTP readiness..."
-ROOT_CODE=""
+log "Waiting for app DB-backed readiness..."
+LOGIN_CODE=""
 for _ in {1..40}; do
-  ROOT_CODE="$(curl -s -o "$TMP_DIR/root.body" -w '%{http_code}' "$APP_URL/" || true)"
-  [[ "$ROOT_CODE" == "200" ]] && break
+  LOGIN_CODE="$(curl -s -o "$TMP_DIR/login_ready.body" -w '%{http_code}' "$APP_URL/login.php" || true)"
+  if [[ "$LOGIN_CODE" == "200" ]] && ! grep -qi "Fatal error" "$TMP_DIR/login_ready.body"; then
+    break
+  fi
   sleep 2
 done
-if [[ "$ROOT_CODE" == "200" ]]; then
-  pass "Home page reachable"
-  assert_contains "Home page has title" "$TMP_DIR/root.body" "BookMyClass"
+if [[ "$LOGIN_CODE" == "200" ]] && ! grep -qi "Fatal error" "$TMP_DIR/login_ready.body"; then
+  pass "Login page reachable with DB connection"
+  assert_contains "Login page has title" "$TMP_DIR/login_ready.body" "BookMyClass"
 else
-  fail "Home page reachable (last code=${ROOT_CODE:-none})"
+  fail "Login page reachable with DB connection (last code=${LOGIN_CODE:-none})"
 fi
 
 ADMIN_COOKIE="$TMP_DIR/admin.cookie"

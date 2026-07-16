@@ -67,7 +67,7 @@ pipeline {
         withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG_FILE')]) {
           sh '''
             set -eu
-	    export KUBECONFIG=$HOME/.kube/config           	
+            export KUBECONFIG="${KUBECONFIG_FILE}"
             kubectl apply -n ${K8S_NAMESPACE} -f mysql-service.yaml
             kubectl apply -n ${K8S_NAMESPACE} -f mysql-deployment.yaml
             kubectl apply -n ${K8S_NAMESPACE} -f app-service.yaml

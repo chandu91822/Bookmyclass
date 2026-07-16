@@ -10,9 +10,9 @@ A role-based classroom booking system with real-time availability and conflict p
 - Image deployed to Kubernetes (Minikube)
 - Application exposed via service
 
-## Architecture Design
+##Architecture Design
 
-![Architecture](assets/Architecture.png)
+![Architecture](Assets/Architecture.png)
 
 ## ⚙️ Tech Stack
 - Frontend: HTML, CSS, JS
