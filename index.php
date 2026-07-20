@@ -189,7 +189,7 @@ session_start();
                     <ul>
                         <li><a href="#">Documentation</a></li>
                         <li><a href="#">Support Center</a></li>
-                        <li><a href="#">Community</a></li>
+                        <li><a href="#">Community Support</a></li>
                     </ul>
                 </div>
                 <div class="footer-links">
