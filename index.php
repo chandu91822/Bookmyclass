@@ -29,7 +29,7 @@ session_start();
                 <a href="index.php">Home</a>
                 <a href="#features">Features</a>
                 <a href="#how-it-works">Demo</a>
-                <a href="#contact">Contact</a>
+                <a href="#contact">Contact Us</a>
             </div>
             <div class="nav-actions">
                 <a href="login.php" class="btn btn-outline">Login</a>
