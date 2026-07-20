@@ -187,7 +187,7 @@ session_start();
                 <div class="footer-links">
                     <h4>Resources</h4>
                     <ul>
-                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">Documentatio</a></li>
                         <li><a href="#">Support Center</a></li>
                         <li><a href="#">Community Support</a></li>
                     </ul>
